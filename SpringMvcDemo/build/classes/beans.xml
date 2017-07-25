@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+           
+           <!-- 用户的配置 接口注入和set注入形式相同-->
+  <bean id="user" class="come.hhj.entity.User">
+  <constructor-arg value="你好"> </constructor-arg>
+  <constructor-arg value="世界"></constructor-arg>
+  <property name="address" ref="address"></property>
+  <property name="age" value="25"></property>
+  <property name="name" value="何慧君"></property>
+  </bean> 
+  
+  		<!-- 用户地址的配置 --> 
+  <bean id="address" class="come.hhj.entity.Address">
+  	<property name="target" value="安徽安庆"></property>
+  </bean>
+  
+ 	 
+     
+     
+     
+         
+  </beans>

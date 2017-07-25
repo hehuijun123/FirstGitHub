@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<!--为了在Spring配置中使用@AspectJ切面，你首先必须启用Spring对@AspectJ切面配置的支持，
+	并确保自动代理（autoproxying）的bean是否能被这些切面通知。自动代理是指Spring会判断一个bean是否使用了一个或多个切面通知，
+	并据此自动生成相应的代理以拦截其方法调用，并且确保通知在需要时执行。  -->
+	
+	<aop:aspectj-autoproxy/>
+
+<!--它指向一个使用了@Aspect注解的bean类：  -->
+
+
+	 <bean id="aspectjj" class="come.hhj.aop.Aspectjj"></bean> 
+	
+	<bean id="animalService2" class="come.hhj.aop.AnimalServiceImplement2"></bean> 
+
+  </beans>

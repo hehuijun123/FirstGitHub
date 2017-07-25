@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+          
+    	<!-- 面向切面编程 面相切面编程是将与业务逻辑无关的公共部分抽离开，形成一个横切的关注点（比如权限问题，比如日志问题 -->
+ 	 	<!-- 配置切入点 -->
+        <!-- execution()语法:execution (* com.xx.xx.impl..*.*(..))
+		        首先明白这个表达式是用来匹配方法的,各种条件是为了筛选整个项目的方法。
+		        (类的访问修饰符
+		        第一个*表示方法返回值类型[*表示所有类型] 
+		        com.xx.xx.impl表示包路径[*表示所有包]
+		        .[.表示当前包下所有类的方法,..表示当前包下及此包下所有子包中的所有类的方法] 
+		        第二个*表示类名[*表示所有类,可以匹配以X开头或结尾如X*、*X、X*X的类名]
+		        第三个*表示方法名[*表示所有方法,可以匹配以X开头或结尾的如X*、*X、X*X的方法名]
+        (..)表示方法参数[..表示任何参数]
+        )-->
+ 	
+ 	 	<bean id="animalService1" class="come.hhj.aop.AnimalServiceImplement1"></bean>
+ 	 	<bean id="animalService2" class="come.hhj.aop.AnimalServiceImplement2"></bean>  
+		<bean id="aspect"  class="come.hhj.aop.AspectOrientedProgramming"></bean>
+       <aop:config>
+       		<aop:aspect id="asp" ref="aspect">
+       		<!-- 切入点 ，该类下面的所有方法-->
+	       		<aop:pointcut id="pointcut" expression="execution(* come.hhj.aop.AnimalServiceImplement1.*(..))" />
+	       	
+	       		 <aop:before method="before" pointcut-ref="pointcut"></aop:before>
+	       		<aop:after method="after" pointcut-ref="pointcut"></aop:after> 
+	       		
+	       		<!-- 测试没有通过<aop:around method="around" pointcut-ref="pointcut"/>  -->
+	       		
+	       		</aop:aspect>
+       </aop:config>
+         
+           
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+ </beans>
