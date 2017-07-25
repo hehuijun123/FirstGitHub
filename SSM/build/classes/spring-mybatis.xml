@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	 <!-- 可以用这个读取配置文件 -->
+    <!-- 引入配置文件
+    <context:property-placeholder location="classpath:jdbc.properties" />  
+ 		 创建数据源，该数据源可以设置mybatis的连接池
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  
+        destroy-method="close">  
+        <property name="driverClassName" value="${driver}" />  
+        <property name="url" value="${url}" />  
+        <property name="username" value="${username}" />  
+        <property name="password" value="${password}" />  
+    </bean>   
+    -->
+    
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+         <property name="url" value="jdbc:mysql://localhost:3306/mybatisdemo" />
+         <property name="username" value="root" />
+         <property name="password" value="" />
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" ></property>
+		<property name="configLocation" value="classpath:mybatisConfig.xml"></property>
+	</bean>  
+	
+	<!-- 数据库是由SqlSession这个实例来操作的，如果你想在类中查询数据库，那么你必须在这个类中存在sqlsession -->
+	
+	
+	<!--建议使用第一种  结构清晰明朗  整合的第一种配置 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	<bean id="userDaoImple" class="come.hhj.dao.imple.UserDaoImple">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	
+	
+	<!-- 整合的第二种配置 -->
+	<!--UserServiceImple.java  	继承了 	 SqlSessionDaoSupport ，
+									SqlSessionDaoSupport中能够	注入	sqlSessionFactory-->
+	
+	<bean id="userService" class="come.hhj.service.imple.UserServiceImple">
+	<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean> 
+	
+	
+	
+	<!-- 事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+ 	<!-- 事物通知 -->
+  	<tx:advice id="advice" transaction-manager="transactionManager">
+  		<tx:attributes>
+  		  		<tx:method name="add" propagation="REQUIRED"/>
+  			<tx:method name="insert" propagation="REQUIRED"/>
+  			<tx:method name="delete*" propagation="REQUIRED"/>
+  			<tx:method name="remove" propagation="REQUIRED"/>
+  			<tx:method name="update" propagation="REQUIRED"/>
+  			<tx:method name="remove*" propagation="REQUIRED"/>
+  		</tx:attributes>
+  	</tx:advice>
+  	<aop:config>
+  		<aop:pointcut expression="execution(* come.hhj.service.*.*(..))" id="pointcut"/>
+  		<aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+  	</aop:config>
+ </beans>
